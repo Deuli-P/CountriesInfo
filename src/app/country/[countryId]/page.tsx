@@ -4,6 +4,7 @@ import { useSearch } from "@/context/Search";
 import { useEffect, useState } from "react";
 import Image  from 'next/image';
 import { FaMapLocation } from "react-icons/fa6";
+import BorderCountry from "@/components/BorderCountry";
 
 type paramsType = {
     params: {
@@ -118,7 +119,6 @@ const Country = ({params}: paramsType ) => {
 
     const [ dataCountry, setDataCountry ] = useState<Country>();
     const [ currencyUse, setCurrencyUse ] = useState<Country["currencies"]>();
-    const [ borderCountry, setBorderCountry ] = useState<Country | BorderCountryType>([]);
 
 
     useEffect( () => {
@@ -138,29 +138,6 @@ const Country = ({params}: paramsType ) => {
     useEffect(() => {
         if (dataCountry) {
             setCurrencyUse(dataCountry.currencies);
-            console.log("[COUNTRY] Border country CCA3: ", dataCountry.borders);
-            if (dataCountry.borders) {
-                Promise.all(
-                    dataCountry.borders.map((code) =>
-                        fetch(`https://restcountries.com/v3.1/alpha/${code}`)
-                            .then((response) => {
-                                if (!response.ok) {
-                                    throw new Error(`HTTP error! Status: ${response.status}`);
-                                }
-                                return response.json() as Promise<Country> // Retourne la promesse pour récupérer les données JSON
-                            })
-                            .then((data) => {
-                                console.log("[COUNTRY][BORDER]fetch data: ", data);
-                                const newData = data as Country
-                                setBorderCountry((currentBorderCountries ) => [...currentBorderCountries , newData]); // Met à jour l'état avec les données du pays frontalier
-                                console.log("[COUNTRY][BORDER] les data des pays border dans le state: ", borderCountry);
-                            })
-                            .catch((error) => {
-                                console.error("Error fetching border country data:", error);
-                            })
-                    )
-                );
-            }
         }
     },[dataCountry, currencyUse])
 
@@ -179,19 +156,12 @@ const Country = ({params}: paramsType ) => {
                 </div>
                 <div className="flex flex-col items-center w-full text-center gap-5">
                     <h2>Pays Frontalier(s):</h2>
-                        {borderCountry ? 
+                        {dataCountry.borders ? 
                         (
                             <ul className="flex flex-row flex-wrap gap-4 justify-center">
-                                {borderCountry.map((border,index) => {
-                                             
-                                            
-                                    return(
-                                        <li key={index} className=" py-[3px] px-4 bg-blue-500  text-white inline rounded-full relative group">
-                                            {border.name}
-                                            <div className="absolute bottom-[-30px] right-[-40px] bg-red-500 text-white rounded-full z-20 py-2 px-2 hidden group-hover:block group-active:block ">
-                                                <p className=" whitespace-nowrap ">{borderCountry ? border.name : "Nom du pays"}</p>
-                                            </div>
-                                        </li>
+                                {dataCountry.borders.map((border) => {
+                                    return (
+                                        <BorderCountry cca3={border} key={border}/>
                                     )
                                 })}
                             </ul>
