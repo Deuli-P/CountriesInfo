@@ -117,9 +117,9 @@ const BorderCountry =({cca3}:CCA3Type,)=> {
     return (
         dataCountry ?
         (
-            <div className=" py-2 px-4 bg-blue-400 text-white whitespace-nowrap rounded-full shadow-md" >
+            <li className=" py-2 px-4 bg-blue-400 text-white whitespace-nowrap rounded-full shadow-md" >
                 <p >{dataCountry.name.common} {dataCountry.flag}</p>
-            </div>
+            </li>
         )
         :
         null
