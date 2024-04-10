@@ -45,7 +45,7 @@ const Article=({item, id}:dataArticle)=> {
                     <h3 className='text-blue-200 underline text-4 underline-offset-2 '> 
                         {item.translations.fra ? item.translations.fra.common : commonName}
                     </h3>
-                    <Link href={`/country/${id}`} className='text-blue-500 cursor-pointer'> Voir plus =></Link>
+                    <Link href={`/country/${id}`} className='text-blue-500 cursor-pointer'> Voir plus ={`>`}</Link>
                 </div>
 
             </article>
