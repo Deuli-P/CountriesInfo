@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearch } from "./../context/Search";
 
 type SubmitTypes = {
-    langue: string;
+    search: string;
 }
 
 type dataSendType = {
@@ -49,9 +49,19 @@ const Formulaire =()=> {
 
 
     return(
-        <form action="submit" onSubmit={(e)=>{e.preventDefault()}} className="px-6 py-4 border-2 border-red-500 rounded-md ring-offset-1 ring-2 ring-blue-600 w-[320px] h-auto flex flex-col justify-center items-center">
-            <label  className="text-blue-400 w-full text-center "> Entrer la langue:
-                <input type="text" className="text-black px-2 w-90% my-3 rounded-md text-6 focus" name="langue" id="langue" value={search} onChange={(text)=>{setSearch(text.target.value)}} placeholder="Langue"/>
+        <form 
+            action="submit" 
+            onSubmit={(e)=>{e.preventDefault()}} 
+            className="
+                py-4 
+                rounded-md 
+                w-full
+                h-auto 
+                justify-center 
+                items-center"
+        >
+            <label  className="text-black w-full text-2xl text-center flex-col flex gap-6"> Entrer la langue ici
+                <input type="text" className="text-black px-4 py-2 w-full  rounded-md text-lg focus h-10 shadow-lg shadow-neutral-400" name="langue" id="langue" value={search} onChange={(text)=>{setSearch(text.target.value)}} placeholder="ENG, english, FRA,deutch..."/>
             </label>
         </form>
     )

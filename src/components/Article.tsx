@@ -37,15 +37,15 @@ const Article=({item, id}:dataArticle)=> {
         console.log('route to country page:',commonName)
     }
   return (
-            <article className='w-auto h-20 border-2 border-green-200 bg-red-300 p-2 relative'>
-                <div className=' flex flex-row items-center  justify-between '>
-                    <Image src={item.flags.png} alt={item.flags.alt} width={50} height={50}/>
+            <article className='w-[100%] h-auto border-2 border-slate-400 bg-slate-200 p-2 rounded-lg relative flex flex-row justify-between items-center'>
+                <div className=' flex flex-row items-center justify-between '>
+                    <Image src={item.flags.png} alt={item.flags.alt} width={80} height={60}/>
+                </div>
+                <div className=' px-[3px] py-[1px]  flex flex-col justify-between items-right h-full text-right' >
                     <h3 className='text-blue-200 underline text-4 underline-offset-2 '> 
                         {item.translations.fra ? item.translations.fra.common : commonName}
                     </h3>
-                </div>
-                <div className='absolute bottom-0 right-0 px-[3px] py-[1px] cursor-pointer' >
-                    <Link href={`/country/${id}`} className='text-blue-500'> Voir plus...</Link>
+                    <Link href={`/country/${id}`} className='text-blue-500 cursor-pointer'> Voir plus =></Link>
                 </div>
 
             </article>

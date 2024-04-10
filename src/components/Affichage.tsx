@@ -36,7 +36,7 @@ const Affichage = ()=> {
 
 
     return (
-        <section id="list-pays" className=" w-full h-auto border border-3 rounded-lg border-yellow-500 flex flex-col md:flex-row  md:flex-wrap gap-4 py-4 justify-center p-4">
+        <section id="list-pays" className=" w-full h-auto grid grid-cols-2  gap-4 py-4 p-4 border-t-slate-500 border-t-2">
             
             { result.length > 0 ?
                 (
@@ -48,9 +48,7 @@ const Affichage = ()=> {
                 )       
             :
                 (
-                    <div className="w-full h-full flex justify-center items-center">
-                        <p className="text-red-500 text-2xl text-center whitespace-nowrap">Pas de pays selectionné</p>
-                    </div>
+                        <p className="text-slate-300 text-2xl text-center whitespace-nowrap">Pas de pays selectionné</p>
                 )
         }
         </section>
