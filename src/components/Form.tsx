@@ -35,7 +35,7 @@ const Formulaire =()=> {
             setDisabled(true);
         }
         sendData({data: searchWithoutTrim})
-    },[search])
+    },[search, empty, disabled])
 
 
     // Envoi des données vers le serveur
