@@ -98,6 +98,18 @@ interface Country {
     };
 }
 
+type BorderCountryType = Country[];
+
+const borderCCA3Test = ['AGO', 'BWA', 'ZAF', 'ZMB']
+
+
+
+// Pour chaque pays frontiere 
+    // j'envoi le CCA3 du pays recu dans Country
+    // je recupere les données du pays frontiere
+    // et je j'ajoute
+
+
 const Country = ({params}: paramsType ) => {
 
     const id = params.countryId;
@@ -106,12 +118,12 @@ const Country = ({params}: paramsType ) => {
 
     const [ dataCountry, setDataCountry ] = useState<Country>();
     const [ currencyUse, setCurrencyUse ] = useState<Country["currencies"]>();
+    const [ borderCountry, setBorderCountry ] = useState<Country | BorderCountryType>([]);
+
 
     useEffect( () => {
         if (result.length > 0) {
-            console.log("result: ", result);
             const country = result[id]
-            console.log("country: ", country);
             setDataCountry(country);
             localStorage.setItem("country", JSON.stringify(country));
         }
@@ -121,13 +133,34 @@ const Country = ({params}: paramsType ) => {
 
         }
     }, [result, id]);
-    
-    
+
 
     useEffect(() => {
-        if(dataCountry){
+        if (dataCountry) {
             setCurrencyUse(dataCountry.currencies);
-            console.log("currencyUse: ", currencyUse);
+            console.log("[COUNTRY] Border country CCA3: ", dataCountry.borders);
+            if (dataCountry.borders) {
+                Promise.all(
+                    dataCountry.borders.map((code) =>
+                        fetch(`https://restcountries.com/v3.1/alpha/${code}`)
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                return response.json() as Promise<Country> // Retourne la promesse pour récupérer les données JSON
+                            })
+                            .then((data) => {
+                                console.log("[COUNTRY][BORDER]fetch data: ", data);
+                                const newData = data as Country
+                                setBorderCountry((currentBorderCountries ) => [...currentBorderCountries , newData]); // Met à jour l'état avec les données du pays frontalier
+                                console.log("[COUNTRY][BORDER] les data des pays border dans le state: ", borderCountry);
+                            })
+                            .catch((error) => {
+                                console.error("Error fetching border country data:", error);
+                            })
+                    )
+                );
+            }
         }
     },[dataCountry, currencyUse])
 
@@ -138,22 +171,29 @@ const Country = ({params}: paramsType ) => {
                 <div className="flex flex-col-reverse items-center justify-between w-full gap-10">
                     <div className="flex flex-row gap-10 items-center">
                         <h1 className="text-3xl font-bold">{dataCountry.name.common}</h1>
-                        <a href={dataCountry.maps.googleMaps} target="_blank" className="pointer-cursor hover:opacity-35 transition-all duration-300 hover:transition-all duration-200">
+                        <a href={dataCountry.maps.googleMaps} target="_blank" className="pointer-cursor hover:opacity-35 transition-all duration-300 hover:transition-all hover:duration-200">
                             <FaMapLocation size={40}/>
                         </a>
                     </div>
-                    <Image src={dataCountry.flags.png} alt={dataCountry.flags.alt} width={250} height={180} />
+                        <Image src={dataCountry.flags.png} alt={dataCountry.flags.alt} width={320} height={220} quality={10} loading="lazy" className="h-auto"/>
                 </div>
                 <div className="flex flex-col items-center w-full text-center gap-5">
                     <h2>Pays Frontalier(s):</h2>
-                        {dataCountry.borders ? 
+                        {borderCountry ? 
                         (
                             <ul className="flex flex-row flex-wrap gap-4 justify-center">
-                                {dataCountry.borders.map((border) => (
-                                    <li key={border} className=" py-[3px] px-4 bg-blue-500  text-white inline rounded-full ">
-                                    {border}
-                                    </li>
-                                ))}
+                                {borderCountry.map((border,index) => {
+                                             
+                                            
+                                    return(
+                                        <li key={index} className=" py-[3px] px-4 bg-blue-500  text-white inline rounded-full relative group">
+                                            {border.name}
+                                            <div className="absolute bottom-[-30px] right-[-40px] bg-red-500 text-white rounded-full z-20 py-2 px-2 hidden group-hover:block group-active:block ">
+                                                <p className=" whitespace-nowrap ">{borderCountry ? border.name : "Nom du pays"}</p>
+                                            </div>
+                                        </li>
+                                    )
+                                })}
                             </ul>
                         )
                         :
